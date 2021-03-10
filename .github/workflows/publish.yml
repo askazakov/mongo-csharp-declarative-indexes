@@ -11,11 +11,16 @@ jobs:
       - uses: actions/setup-dotnet@v1
       - uses: actions/checkout@v2
         with:
-          ref: $GITHUB_REF
+          ref: ${{ github.event.release.tag_name }}
           fetch-depth: 0
       - name: build
         run: dotnet build --configuration Release
       - name: pack
-        run: dotnet pack --no-build --configuration Release mongo-declarative-indexes/mongo-declarative-indexes.csproj -p:PackageVersion=${{ github.event.release.tag_name }} --output .
+        run: > 
+          dotnet pack mongo-declarative-indexes/mongo-declarative-indexes.csproj
+                      --no-build 
+                      --configuration Release 
+                      -p:PackageVersion=${{ github.event.release.tag_name }}
+                      --output .
       - name: push
         run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
