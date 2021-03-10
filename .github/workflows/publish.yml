@@ -1,0 +1,11 @@
+name: publish to nuget
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - id: echo
+        run: echo "hello $GITHUB_REF"
