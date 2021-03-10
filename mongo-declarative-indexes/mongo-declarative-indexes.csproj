@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>MongoDB.DeclarativeIndexes</RootNamespace>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <PackageId>MongoDB.DeclarativeIndexes</PackageId>
+        <PackageDescription>Helper for declarative description ot the desired indexes</PackageDescription>
+        <Authors>Anatoly Kazakov</Authors>
+        <RepositoryUrl>https://github.com/askazakov/mongo-csharp-declarative-indexes</RepositoryUrl>
+        <PackageTags>mongodb;mongo</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+
+</Project>
