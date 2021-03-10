@@ -16,9 +16,11 @@ jobs:
       - name: build
         run: dotnet build --configuration Release
       - name: pack
-        run: dotnet pack  --no-build \
-                          --configuration Release mongo-declarative-indexes/mongo-declarative-indexes.csproj \
-                          -p:PackageVersion=${{ github.event.release.tag_name }} \
-                          --output .
+        run: >-
+          dotnet pack --no-build
+                      --configuration Release mongo-declarative-indexes/mongo-declarative-indexes.csproj
+                      -p:PackageVersion=${{ github.event.release.tag_name }}
+#                      --output .
+      
       -name: push
         run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
