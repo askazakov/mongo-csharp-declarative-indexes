@@ -76,24 +76,25 @@ namespace mongo_declarative_indexes.Tests
                 {"name", "field_1"},
                 {"ns", "test.collections"}
             };
+            const string remainingFieldName = "remaining_field";
             var remainingDbIndex = new Dictionary<string, object>
             {
                 {"v", 2},
-                {"key", new Dictionary<string, object> {{"another_field", 1}}},
-                {"name", "another_field_1"},
+                {"key", new Dictionary<string, object> {{remainingFieldName, 1}}},
+                {"name", $"{remainingFieldName}_1"},
                 {"ns", "test.collections"}
             };
-            database.ListCollectionNames().Returns(new[] {"collectionName"});
-            database.ListIndexes("collectionName").Returns(new[] {extraIndex, remainingDbIndex});
-
+            const string collectionName = "collectionName";
+            database.ListCollectionNames().Returns(new[] {collectionName});
+            database.ListIndexes(collectionName).Returns(new[] {extraIndex, remainingDbIndex});
 
             var expectedCreatedIndexes = new[] {new Index(keys: new Key("yet_another_field", IndexType.Descending))};
             var ensurer = new IndexEnsurer(database);
-            var remainingIndex = new Index(keys: new Key("another_field", IndexType.Ascending));
-            ensurer.Ensure(new CollectionIndexes("testCollection",
+            var remainingIndex = new Index(keys: new Key(remainingFieldName, IndexType.Ascending));
+            ensurer.Ensure(new CollectionIndexes(collectionName,
                                                  expectedCreatedIndexes.Append(remainingIndex).ToArray()));
-            database.Received().DropOneIndex("collectionName", "field_1");
-            database.Received().CreateManyIndexes("testCollection",
+            database.Received().DropOneIndex(collectionName, "field_1");
+            database.Received().CreateManyIndexes(collectionName,
                                                   Arg.Is<Index[]>(actualIndexes =>
                                                                       actualIndexes
                                                                           .SequenceEqual(expectedCreatedIndexes)));

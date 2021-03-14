@@ -7,6 +7,9 @@ namespace MongoDB.DeclarativeIndexes
     {
         private readonly IDatabase _database;
 
+        private static readonly IndexIgnoringNameEqualityComparer IndexIgnoringNameEqualityComparer =
+            new IndexIgnoringNameEqualityComparer();
+
         public IndexEnsurer(IDatabase database)
         {
             _database = database;
@@ -26,7 +29,7 @@ namespace MongoDB.DeclarativeIndexes
                                                                   !targetIndexesByCollectionName
                                                                       .ContainsKey(i.CollectionName) ||
                                                                   !targetIndexesByCollectionName[i.CollectionName]
-                                                                      .Contains(x)).ToArray())).ToList();
+                                                                      .Contains(x, IndexIgnoringNameEqualityComparer)).ToArray())).ToList();
 
             foreach (var collectionIndex in extraIndexes)
             foreach (var index in collectionIndex.Indexes)
@@ -64,7 +67,28 @@ namespace MongoDB.DeclarativeIndexes
         {
             return collectionIndex.Indexes
                 .Where(i => !existingIndexesByCollectionName.ContainsKey(collectionIndex.CollectionName) ||
-                            !existingIndexesByCollectionName[collectionIndex.CollectionName].Contains(i)).ToArray();
+                            !existingIndexesByCollectionName[collectionIndex.CollectionName]
+                                .Contains(i, IndexIgnoringNameEqualityComparer)).ToArray();
+        }
+    }
+
+    internal class IndexIgnoringNameEqualityComparer : IEqualityComparer<Index>
+    {
+        public bool Equals(Index x, Index y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Keys.SequenceEqual(y.Keys) && x.Unique == y.Unique;
+        }
+
+        public int GetHashCode(Index obj)
+        {
+            unchecked
+            {
+                return ((obj.Keys != null ? obj.Keys.GetHashCode() : 0) * 397) ^ obj.Unique.GetHashCode();
+            }
         }
     }
 

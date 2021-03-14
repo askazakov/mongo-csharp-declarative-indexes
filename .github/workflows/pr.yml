@@ -10,7 +10,8 @@ jobs:
       - uses: actions/setup-dotnet@v1
       - uses: actions/checkout@v2
       - run: dotnet build --configuration Release
-      - run: |
+      - name: unit tests  
+        run: |
           cd ${{ github.workspace }}/mongo-declarative-indexes.Tests
           dotnet test --configuration Release --no-build
         

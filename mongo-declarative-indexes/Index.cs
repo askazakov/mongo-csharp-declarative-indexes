@@ -62,6 +62,26 @@ namespace MongoDB.DeclarativeIndexes
         public string Field { get; }
 
         public IndexType IndexType { get; }
+
+        protected bool Equals(Key other)
+        {
+            return Field == other.Field && IndexType == other.IndexType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Key) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Field != null ? Field.GetHashCode() : 0) * 397) ^ (int) IndexType;
+            }
+        }
     }
 
     public enum IndexType
