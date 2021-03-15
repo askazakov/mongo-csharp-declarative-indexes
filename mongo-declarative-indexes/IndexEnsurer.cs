@@ -15,7 +15,7 @@ namespace MongoDB.DeclarativeIndexes
             _database = database;
         }
 
-        public EnsurerContinuation Begin(IEnumerable<CollectionIndexes> indexes)
+        public EnsurerContinuation Begin(params CollectionIndexes[] indexes)
         {
             var targetIndexesByCollectionName = indexes.ToDictionary(i => i.CollectionName, i => i.Indexes);
 
