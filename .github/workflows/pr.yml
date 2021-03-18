@@ -13,7 +13,7 @@ jobs:
       
       - name: install & run JetBrains cleanupcode
         run: |
-          dotnet install -g JetBrains.ReSharper.GlobalTools
+          dotnet tool install -g JetBrains.ReSharper.GlobalTools
           jb cleanupcode mongo-declarative-indexes.sln
       
       - run: dotnet build --configuration Release
