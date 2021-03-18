@@ -14,7 +14,9 @@ jobs:
       - name: install & run JetBrains cleanupcode
         run: |
           dotnet tool install -g JetBrains.ReSharper.GlobalTools
-          jb cleanupcode mongo-declarative-indexes.sln
+          dotnet tool install -g ReGitLint
+          dotnet regitlint --fail-on-diff
+#          jb cleanupcode mongo-declarative-indexes.sln
       
       - run: dotnet build --configuration Release
       
