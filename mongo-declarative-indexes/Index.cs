@@ -30,7 +30,7 @@ namespace MongoDB.DeclarativeIndexes
              */
             var dbKeys = (IEnumerable<KeyValuePair<string, object>>) dbDocument["key"];
             return new Index(keys: dbKeys.Select(x => new Key(x.Key, IndexType.Ascending)).ToArray(),
-                             name: (string) dbDocument.GetValueOrDefault("name"));
+                name: (string) dbDocument.GetValueOrDefault("name"));
         }
 
         public Dictionary<string, object> ToDb()
@@ -87,7 +87,8 @@ namespace MongoDB.DeclarativeIndexes
     public enum IndexType
     {
         Ascending,
-        Descending,
+
+        Descending
         // Text
     }
 }

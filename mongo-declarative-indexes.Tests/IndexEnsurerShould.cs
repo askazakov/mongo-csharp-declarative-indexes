@@ -19,8 +19,8 @@ namespace mongo_declarative_indexes.Tests
             ensurer.Ensure(new CollectionIndexes("testCollection", expectedIndexes));
 
             database.Received().CreateManyIndexes("testCollection",
-                                                  Arg.Is<Index[]>(actualIndexes =>
-                                                                      actualIndexes.SequenceEqual(expectedIndexes)));
+                Arg.Is<Index[]>(actualIndexes =>
+                    actualIndexes.SequenceEqual(expectedIndexes)));
         }
 
         [Fact]
@@ -92,12 +92,12 @@ namespace mongo_declarative_indexes.Tests
             var ensurer = new IndexEnsurer(database);
             var remainingIndex = new Index(keys: new Key(remainingFieldName, IndexType.Ascending));
             ensurer.Ensure(new CollectionIndexes(collectionName,
-                                                 expectedCreatedIndexes.Append(remainingIndex).ToArray()));
+                expectedCreatedIndexes.Append(remainingIndex).ToArray()));
             database.Received().DropOneIndex(collectionName, "field_1");
             database.Received().CreateManyIndexes(collectionName,
-                                                  Arg.Is<Index[]>(actualIndexes =>
-                                                                      actualIndexes
-                                                                          .SequenceEqual(expectedCreatedIndexes)));
+                Arg.Is<Index[]>(actualIndexes =>
+                    actualIndexes
+                        .SequenceEqual(expectedCreatedIndexes)));
         }
     }
 }
