@@ -8,8 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-dotnet@v1
+    
       - uses: actions/checkout@v2
+      
+      - name: install & run JetBrains cleanupcode
+        run: |
+          dotnet install -g JetBrains.ReSharper.GlobalTools
+          jb cleanupcode mongo-declarative-indexes.sln
+      
       - run: dotnet build --configuration Release
+      
       - name: unit tests  
         run: |
           cd ${{ github.workspace }}/mongo-declarative-indexes.Tests
