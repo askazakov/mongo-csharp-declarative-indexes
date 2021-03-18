@@ -5,10 +5,10 @@ namespace MongoDB.DeclarativeIndexes
 {
     public class IndexEnsurer
     {
-        private readonly IDatabase _database;
-
         private static readonly IndexIgnoringNameEqualityComparer IndexIgnoringNameEqualityComparer =
             new IndexIgnoringNameEqualityComparer();
+
+        private readonly IDatabase _database;
 
         public IndexEnsurer(IDatabase database)
         {
@@ -24,12 +24,12 @@ namespace MongoDB.DeclarativeIndexes
 
             var extraIndexes = existingIndexes
                 .Select(i => new CollectionIndexes(i.CollectionName,
-                                                   i.Indexes
-                                                       .Where(x =>
-                                                                  !targetIndexesByCollectionName
-                                                                      .ContainsKey(i.CollectionName) ||
-                                                                  !targetIndexesByCollectionName[i.CollectionName]
-                                                                      .Contains(x, IndexIgnoringNameEqualityComparer)).ToArray())).ToList();
+                    i.Indexes
+                        .Where(x =>
+                            !targetIndexesByCollectionName
+                                .ContainsKey(i.CollectionName) ||
+                            !targetIndexesByCollectionName[i.CollectionName]
+                                .Contains(x, IndexIgnoringNameEqualityComparer)).ToArray())).ToList();
 
             foreach (var collectionIndex in extraIndexes)
             foreach (var index in collectionIndex.Indexes)
@@ -38,9 +38,9 @@ namespace MongoDB.DeclarativeIndexes
             var existingIndexesByCollectionName = existingIndexes.ToDictionary(i => i.CollectionName, i => i.Indexes);
 
             var missingIndexes = indexes.Select(collectionIndex =>
-                                                    new CollectionIndexes(collectionIndex.CollectionName,
-                                                                          GetMissingIndexes(existingIndexesByCollectionName,
-                                                                              collectionIndex))).ToList();
+                new CollectionIndexes(collectionIndex.CollectionName,
+                    GetMissingIndexes(existingIndexesByCollectionName,
+                        collectionIndex))).ToList();
 
 
             return new EnsurerContinuation(_database, missingIndexes, extraIndexes);
@@ -63,7 +63,7 @@ namespace MongoDB.DeclarativeIndexes
         }
 
         private static Index[] GetMissingIndexes(IReadOnlyDictionary<string, Index[]> existingIndexesByCollectionName,
-                                                 CollectionIndexes collectionIndex)
+            CollectionIndexes collectionIndex)
         {
             return collectionIndex.Indexes
                 .Where(i => !existingIndexesByCollectionName.ContainsKey(collectionIndex.CollectionName) ||
@@ -95,12 +95,12 @@ namespace MongoDB.DeclarativeIndexes
     public sealed class EnsurerContinuation
     {
         private readonly IDatabase _database;
-
-        private readonly List<CollectionIndexes> _missingIndexes;
         private readonly List<CollectionIndexes> _extraIndexes;
 
+        private readonly List<CollectionIndexes> _missingIndexes;
+
         internal EnsurerContinuation(IDatabase database, List<CollectionIndexes> missingIndexes,
-                                     List<CollectionIndexes> extraIndexes)
+            List<CollectionIndexes> extraIndexes)
         {
             _missingIndexes = missingIndexes;
             _extraIndexes = extraIndexes;
